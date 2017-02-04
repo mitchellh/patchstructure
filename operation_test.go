@@ -182,6 +182,109 @@ func TestOperationApply(t *testing.T) {
 			nil,
 			true,
 		},
+
+		//-----------------------------------------------------------
+		// replace
+		//-----------------------------------------------------------
+
+		{
+			"replace: root",
+			Operation{
+				Op:    OpReplace,
+				Path:  "",
+				Value: "bar",
+			},
+			nil,
+			"bar",
+			false,
+		},
+
+		{
+			"replace: new member",
+			Operation{
+				Op:    OpReplace,
+				Path:  "/a",
+				Value: "bar",
+			},
+			map[string]interface{}{},
+			nil,
+			true,
+		},
+
+		{
+			"replace: existing member",
+			Operation{
+				Op:    OpReplace,
+				Path:  "/a",
+				Value: "bar",
+			},
+			map[string]interface{}{"a": "foo"},
+			map[string]interface{}{"a": "bar"},
+			false,
+		},
+
+		// NOTE(mitchellh): It is unclear what the RFC expects for this
+		// behavior. It says that the target path must exist, and yet
+		// I'm unsure if a "-" addr exists... it isn't clear.
+		{
+			"replace: slice append",
+			Operation{
+				Op:    OpReplace,
+				Path:  "/-",
+				Value: "bar",
+			},
+			[]interface{}{1, 2},
+			nil,
+			true,
+		},
+
+		{
+			"replace: slice index",
+			Operation{
+				Op:    OpReplace,
+				Path:  "/1",
+				Value: "bar",
+			},
+			[]interface{}{1, 2},
+			[]interface{}{1, "bar"},
+			false,
+		},
+
+		{
+			"replace: slice index at 0",
+			Operation{
+				Op:    OpReplace,
+				Path:  "/0",
+				Value: "bar",
+			},
+			[]interface{}{1, 2},
+			[]interface{}{"bar", 2},
+			false,
+		},
+
+		{
+			"replace: slice index out of bounds",
+			Operation{
+				Op:    OpReplace,
+				Path:  "/4",
+				Value: "bar",
+			},
+			[]interface{}{1, 2},
+			nil,
+			true,
+		},
+
+		{
+			"replace: non-existent container",
+			Operation{
+				Op:    OpReplace,
+				Path:  "/b/a",
+				Value: "bar",
+			},
+			map[string]interface{}{"a": "foo"},
+			nil,
+			true,
+		},
 	}
 
 	for i, tc := range cases {
