@@ -69,8 +69,15 @@ type opApplyFunc func(*Operation, interface{}) (interface{}, error)
 
 // onApplyMap is the map used for lookup for the action to perform
 // when applying an operation.
-var opApplyMap = map[Op]opApplyFunc{
-	OpAdd:     opAdd,
-	OpRemove:  opRemove,
-	OpReplace: opReplace,
+var opApplyMap map[Op]opApplyFunc
+
+func init() {
+	// We can't initialize this inline above since it causes an
+	// "initialization loop" error on the compiler.
+	opApplyMap = map[Op]opApplyFunc{
+		OpAdd:     opAdd,
+		OpRemove:  opRemove,
+		OpReplace: opReplace,
+		OpMove:    opMove,
+	}
 }

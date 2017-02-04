@@ -285,6 +285,50 @@ func TestOperationApply(t *testing.T) {
 			nil,
 			true,
 		},
+
+		//-----------------------------------------------------------
+		// move
+		//-----------------------------------------------------------
+
+		{
+			"move: object member",
+			Operation{
+				Op:   OpMove,
+				Path: "/b",
+				From: "/a",
+			},
+			map[string]interface{}{"a": "bar"},
+			map[string]interface{}{"b": "bar"},
+			false,
+		},
+
+		{
+			"move: slice index",
+			Operation{
+				Op:   OpMove,
+				Path: "/2",
+				From: "/1",
+			},
+			[]interface{}{1, 2, 3, 4},
+			[]interface{}{1, 3, 2, 4},
+			false,
+		},
+
+		{
+			"move: into self subpath",
+			Operation{
+				Op:   OpMove,
+				Path: "/b/a",
+				From: "/b",
+			},
+			map[string]interface{}{
+				"b": map[string]interface{}{
+					"a": 42,
+				},
+			},
+			nil,
+			true,
+		},
 	}
 
 	for i, tc := range cases {
