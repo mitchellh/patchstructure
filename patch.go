@@ -1,3 +1,14 @@
+// Package patchstructure is a Go library for applying patches to modify
+// existing Go structures.
+//
+// patchstructure is based on
+// [JSON Patch (RFC 6902)](https://tools.ietf.org/html/rfc6902), but
+// applies to Go strucutures instead of JSON objects.
+//
+// The goal of patchstructure is to provide a single API and format for
+// representing and applying changes to Go structures. With this in place,
+// diffs between structures can be represented, changes to a structure
+// can be treated as a log, etc.
 package patchstructure
 
 // Patch applies the set of operations sequentially to the value v.
