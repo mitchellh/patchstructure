@@ -370,6 +370,22 @@ func TestOperationApply(t *testing.T) {
 			nil,
 			true,
 		},
+
+		//-----------------------------------------------------------
+		// test
+		//-----------------------------------------------------------
+
+		{
+			"test: member",
+			Operation{
+				Op:    OpTest,
+				Path:  "/a",
+				Value: "bar",
+			},
+			map[string]interface{}{"a": "bar"},
+			map[string]interface{}{"a": "bar"},
+			false,
+		},
 	}
 
 	for i, tc := range cases {

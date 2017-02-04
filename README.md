@@ -37,6 +37,11 @@ function of the RFC, but are important to know when using this library:
     [copystructure](https://github.com/mitchellh/copystructure). You can
     set the `Shallow` field to true on the operation to avoid this behavior.
 
+  * The "test" operation is currently implemented with `reflect.DeepEqual`
+    which is _not_ exactly correct according to the RFC. This will work fine
+    for most basic primitives but the limitations of that approach should be
+    known. In the future we should rework this.
+
 ## Installation
 
 Standard `go get`:

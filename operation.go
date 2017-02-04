@@ -104,5 +104,6 @@ func init() {
 		OpReplace: opReplace,
 		OpMove:    opMove,
 		OpCopy:    opCopy,
+		OpTest:    opTest,
 	}
 }
