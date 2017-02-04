@@ -1,6 +1,7 @@
 package patchstructure
 
 import (
+	"encoding/json"
 	"fmt"
 	"reflect"
 	"testing"
@@ -383,6 +384,54 @@ func TestOperationApply(t *testing.T) {
 
 			if !reflect.DeepEqual(actual, tc.Expected) {
 				t.Fatalf("bad: %#v", actual)
+			}
+		})
+	}
+}
+
+func TestOperationJSON(t *testing.T) {
+	cases := []struct {
+		Name     string
+		Input    string
+		Expected *Operation
+		Err      bool
+	}{
+		{
+			"basic",
+			`{ "op": "replace", "path": "/a/b/c", "value": 42 }`,
+			&Operation{
+				Op:    OpReplace,
+				Path:  "/a/b/c",
+				Value: float64(42),
+			},
+			false,
+		},
+
+		{
+			"shallow",
+			`{ "op": "copy", "path": "/a/b/c", "shallow": true }`,
+			&Operation{
+				Op:      OpCopy,
+				Path:    "/a/b/c",
+				Shallow: true,
+			},
+			false,
+		},
+	}
+
+	for i, tc := range cases {
+		t.Run(fmt.Sprintf("%d-%s", i, tc.Name), func(t *testing.T) {
+			var actual Operation
+			err := json.Unmarshal([]byte(tc.Input), &actual)
+			if (err != nil) != tc.Err {
+				t.Fatalf("err: %s", err)
+			}
+			if err != nil {
+				return
+			}
+
+			if !reflect.DeepEqual(&actual, tc.Expected) {
+				t.Fatalf("bad: %#v", &actual)
 			}
 		})
 	}

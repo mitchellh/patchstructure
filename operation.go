@@ -1,6 +1,7 @@
 package patchstructure
 
 import (
+	"encoding/json"
 	"fmt"
 )
 
@@ -10,11 +11,11 @@ import (
 // the JSON patch documentation for details on this since the semantics for
 // the Go patch is identical.
 type Operation struct {
-	Op      Op          // Op is the operation type to apply
-	Path    string      // Path is required
-	Value   interface{} // Optional depending on op
-	From    string      // Optional depending on op
-	Shallow bool        // If true, OpCopy will not deep copy the value
+	Op      Op          `json:"op"`      // Op is the operation type to apply
+	Path    string      `json:"path"`    // Path is required
+	Value   interface{} `json:"value"`   // Optional depending on op
+	From    string      `json:"from"`    // Optional depending on op
+	Shallow bool        `json:"shallow"` // If true, OpCopy will not deep copy the value
 }
 
 // Op is an enum representing the supported operations for a patch.
@@ -36,6 +37,28 @@ const (
 // String format of an operation matching what it should be if JSON encoded.
 func (o Op) String() string {
 	return opString[o]
+}
+
+// json.Marshaler
+func (o Op) MarshalJSON() ([]byte, error) {
+	return json.Marshal(o.String())
+}
+
+// json.Unmarshaler
+func (o *Op) UnmarshalJSON(raw []byte) error {
+	var expected string
+	if err := json.Unmarshal(raw, &expected); err != nil {
+		return err
+	}
+
+	for k, v := range opString {
+		if v == expected {
+			*o = k
+			return nil
+		}
+	}
+
+	return fmt.Errorf("unsupported op type: %s", string(raw))
 }
 
 // Apply performs the operation on the value v. The value v will be modified.
