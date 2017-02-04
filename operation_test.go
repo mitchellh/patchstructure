@@ -124,6 +124,64 @@ func TestOperationApply(t *testing.T) {
 			nil,
 			true,
 		},
+
+		//-----------------------------------------------------------
+		// remove
+		//-----------------------------------------------------------
+
+		{
+			"remove: map element",
+			Operation{
+				Op:   OpRemove,
+				Path: "/foo/bar",
+			},
+			map[string]interface{}{
+				"foo": map[string]interface{}{
+					"bar": 42,
+				},
+			},
+			map[string]interface{}{
+				"foo": map[string]interface{}{},
+			},
+			false,
+		},
+
+		{
+			"remove: map element that doesn't exist",
+			Operation{
+				Op:   OpRemove,
+				Path: "/foo/baz",
+			},
+			map[string]interface{}{
+				"foo": map[string]interface{}{
+					"bar": 42,
+				},
+			},
+			nil,
+			true,
+		},
+
+		{
+			"remove: slice index at 0",
+			Operation{
+				Op:   OpRemove,
+				Path: "/0",
+			},
+			[]interface{}{1, 2},
+			[]interface{}{2},
+			false,
+		},
+
+		{
+			"remove: slice index that doesn't exist",
+			Operation{
+				Op:   OpRemove,
+				Path: "/4",
+			},
+			[]interface{}{1, 2},
+			nil,
+			true,
+		},
 	}
 
 	for i, tc := range cases {

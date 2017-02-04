@@ -70,5 +70,6 @@ type opApplyFunc func(*Operation, interface{}) (interface{}, error)
 // onApplyMap is the map used for lookup for the action to perform
 // when applying an operation.
 var opApplyMap = map[Op]opApplyFunc{
-	OpAdd: opAdd,
+	OpAdd:    opAdd,
+	OpRemove: opRemove,
 }
