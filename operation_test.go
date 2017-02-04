@@ -14,6 +14,10 @@ func TestOperationApply(t *testing.T) {
 		Expected  interface{}
 		Err       bool
 	}{
+		//-----------------------------------------------------------
+		// add
+		//-----------------------------------------------------------
+
 		// "The root of the target document - whereupon the specified value
 		//  becomes the entire content of the target document."
 		{
