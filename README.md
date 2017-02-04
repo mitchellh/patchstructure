@@ -24,7 +24,18 @@ can be treated as a log, etc.
 
 For an exhaustive list of supported features, please view the
 [JSON Patch RFC (RFC 6902)](https://tools.ietf.org/html/rfc6902) which
-this implements completely, but for Go structures.
+this implements completely, but for Go structures. Exceptions to the RFC
+are documented below.
+
+## Differences from RFC 6902
+
+RFC 6902 was created for JSON structures. Due to minor differences in
+Go structures, there are some differences. These don't change the
+function of the RFC, but are important to know when using this library:
+
+  * The "copy" operation will perform a deep copy by default using
+    [copystructure](https://github.com/mitchellh/copystructure). You can
+    set the `Shallow` field to true on the operation to avoid this behavior.
 
 ## Installation
 
