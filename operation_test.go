@@ -93,6 +93,20 @@ func TestOperationApply(t *testing.T) {
 			false,
 		},
 
+		// "The specified index MUST NOT be greater than the
+		// number of elements in the array"
+		{
+			"add: slice index out of bounds",
+			Operation{
+				Op:    OpAdd,
+				Path:  "/4",
+				Value: "bar",
+			},
+			[]interface{}{1, 2},
+			nil,
+			true,
+		},
+
 		// "However, the object itself or an array containing it does need to
 		// exist, and it remains an error for that not to be the case."
 		{

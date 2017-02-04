@@ -82,6 +82,14 @@ func opAddSlice(
 	}
 	idx := int(idxRaw)
 
+	// "The specified index MUST NOT be greater than the
+	// number of elements in the array"
+	if idx >= parentVal.Len() {
+		return nil, fmt.Errorf(
+			"index %d is greater than the length %d",
+			idx, parentVal.Len())
+	}
+
 	// Create a zero value to append for: s = append(s, 0)
 	sliceType := parentVal.Type()
 	slice := reflect.Append(parentVal, reflect.Indirect(reflect.New(sliceType.Elem())))
