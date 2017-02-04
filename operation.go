@@ -43,12 +43,12 @@ func (o Op) String() string {
 func (o *Operation) Apply(v interface{}) (interface{}, error) {
 	f, ok := opApplyMap[o.Op]
 	if !ok {
-		return nil, fmt.Errorf("unknown operation: %s", o.Op)
+		return v, fmt.Errorf("unknown operation: %s", o.Op)
 	}
 
 	result, err := f(o, v)
 	if err != nil {
-		return nil, fmt.Errorf("error applying operation %s: %s", o.Op, err)
+		return result, fmt.Errorf("error applying operation %s: %s", o.Op, err)
 	}
 
 	return result, nil

@@ -9,7 +9,7 @@ func opRemove(op *Operation, v interface{}) (interface{}, error) {
 	// Parse the path
 	pointer, err := pointerstructure.Parse(op.Path)
 	if err != nil {
-		return nil, err
+		return v, err
 	}
 
 	// The only thing we need to check is that the pointer path actually
@@ -17,7 +17,7 @@ func opRemove(op *Operation, v interface{}) (interface{}, error) {
 	//
 	// "The target location MUST exist for the operation to be successful."
 	if _, err := pointer.Get(v); err != nil {
-		return nil, err
+		return v, err
 	}
 
 	// Delete always does the right thing

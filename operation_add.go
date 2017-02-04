@@ -13,7 +13,7 @@ func opAdd(op *Operation, v interface{}) (interface{}, error) {
 	// Parse the path
 	pointer, err := pointerstructure.Parse(op.Path)
 	if err != nil {
-		return nil, err
+		return v, err
 	}
 
 	// If the pointer is root, then we apply directly to it since it'll
@@ -27,7 +27,7 @@ func opAdd(op *Operation, v interface{}) (interface{}, error) {
 	// Get the path that we want to add to (the parent)
 	parent, err := pointer.Parent().Get(v)
 	if err != nil {
-		return nil, err
+		return v, err
 	}
 
 	// The type will determine how we handle this
@@ -45,7 +45,7 @@ func opAdd(op *Operation, v interface{}) (interface{}, error) {
 		return opAddSlice(pointer, parentVal, op, v)
 
 	default:
-		return nil, fmt.Errorf(
+		return v, fmt.Errorf(
 			"can only add to maps, slices, arrays, or structs, got %q",
 			parentVal.Kind())
 	}
@@ -78,14 +78,14 @@ func opAddSlice(
 	// First step: convert the part to an int so we can determine what index
 	idxRaw, err := strconv.ParseInt(endPart, 10, 0)
 	if err != nil {
-		return nil, fmt.Errorf("error parsing index %q: %s", endPart, err)
+		return v, fmt.Errorf("error parsing index %q: %s", endPart, err)
 	}
 	idx := int(idxRaw)
 
 	// "The specified index MUST NOT be greater than the
 	// number of elements in the array"
 	if idx >= parentVal.Len() {
-		return nil, fmt.Errorf(
+		return v, fmt.Errorf(
 			"index %d is greater than the length %d",
 			idx, parentVal.Len())
 	}
@@ -102,7 +102,7 @@ func opAddSlice(
 	// Set the parent so that the slice is overwritten
 	v, err = p.Parent().Set(v, slice.Interface())
 	if err != nil {
-		return nil, err
+		return v, err
 	}
 
 	// Write: s[i] = x

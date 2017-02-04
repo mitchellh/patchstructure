@@ -13,20 +13,20 @@ func opMove(op *Operation, v interface{}) (interface{}, error) {
 	// avoid syntax errors causing partial applies.
 	to, err := pointerstructure.Parse(op.Path)
 	if err != nil {
-		return nil, err
+		return v, err
 	}
 
 	// Parse the from path, which must exist
 	from, err := pointerstructure.Parse(op.From)
 	if err != nil {
-		return nil, err
+		return v, err
 	}
 
 	// "The "from" location MUST NOT be a proper prefix of the "path"
 	// location; i.e., a location cannot be moved into one of its children."
 	if len(from.Parts) < len(to.Parts) {
 		if reflect.DeepEqual(from.Parts, to.Parts[:len(from.Parts)]) {
-			return nil, fmt.Errorf(
+			return v, fmt.Errorf(
 				"move cannot move into a child path of the from path")
 		}
 	}
@@ -34,7 +34,7 @@ func opMove(op *Operation, v interface{}) (interface{}, error) {
 	// Get the from value, which must exist
 	fromValue, err := from.Get(v)
 	if err != nil {
-		return nil, err
+		return v, err
 	}
 
 	// "This operation is functionally identical to a "remove" operation on
@@ -54,7 +54,7 @@ func opMove(op *Operation, v interface{}) (interface{}, error) {
 	// Remove first
 	v, err = removeOp.Apply(v)
 	if err != nil {
-		return nil, err
+		return v, err
 	}
 
 	// Add

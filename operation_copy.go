@@ -10,19 +10,19 @@ func opCopy(op *Operation, v interface{}) (interface{}, error) {
 	// avoid syntax errors causing partial applies.
 	_, err := pointerstructure.Parse(op.Path)
 	if err != nil {
-		return nil, err
+		return v, err
 	}
 
 	// Parse the from path, which must exist
 	from, err := pointerstructure.Parse(op.From)
 	if err != nil {
-		return nil, err
+		return v, err
 	}
 
 	// Get the from value, which must exist
 	fromValue, err := from.Get(v)
 	if err != nil {
-		return nil, err
+		return v, err
 	}
 
 	// "This operation is functionally identical to an "add" operation at the
