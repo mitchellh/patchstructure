@@ -55,6 +55,44 @@ func TestOperationApply(t *testing.T) {
 			false,
 		},
 
+		// "If the target location specifies an array index, a new value is
+		// inserted into the array at the specified index."
+		{
+			"add: slice append",
+			Operation{
+				Op:    OpAdd,
+				Path:  "/-",
+				Value: "bar",
+			},
+			[]interface{}{1, 2},
+			[]interface{}{1, 2, "bar"},
+			false,
+		},
+
+		{
+			"add: slice index",
+			Operation{
+				Op:    OpAdd,
+				Path:  "/1",
+				Value: "bar",
+			},
+			[]interface{}{1, 2},
+			[]interface{}{1, "bar", 2},
+			false,
+		},
+
+		{
+			"add: slice index at 0",
+			Operation{
+				Op:    OpAdd,
+				Path:  "/0",
+				Value: "bar",
+			},
+			[]interface{}{1, 2},
+			[]interface{}{"bar", 1, 2},
+			false,
+		},
+
 		// "However, the object itself or an array containing it does need to
 		// exist, and it remains an error for that not to be the case."
 		{
