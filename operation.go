@@ -10,10 +10,11 @@ import (
 // the JSON patch documentation for details on this since the semantics for
 // the Go patch is identical.
 type Operation struct {
-	Op    Op          // Op is the operation type to apply
-	Path  string      // Path is required
-	Value interface{} // Optional depending on op
-	From  string      // Optional depending on op
+	Op      Op          // Op is the operation type to apply
+	Path    string      // Path is required
+	Value   interface{} // Optional depending on op
+	From    string      // Optional depending on op
+	Shallow bool        // If true, OpCopy will not deep copy the value
 }
 
 // Op is an enum representing the supported operations for a patch.

@@ -1,6 +1,9 @@
 package patchstructure
 
 import (
+	"fmt"
+
+	"github.com/mitchellh/copystructure"
 	"github.com/mitchellh/pointerstructure"
 )
 
@@ -23,6 +26,18 @@ func opCopy(op *Operation, v interface{}) (interface{}, error) {
 	fromValue, err := from.Get(v)
 	if err != nil {
 		return v, err
+	}
+
+	// Perform a deep copy if requested. This is unique to Go to avoid
+	// references matching. We make it opt-out since it feels like the obvious
+	// behavior when requesting a "copy".
+	if !op.Shallow {
+		copy, err := copystructure.Copy(fromValue)
+		if err != nil {
+			return v, fmt.Errorf("error copying from value: %s", err)
+		}
+
+		fromValue = copy
 	}
 
 	// "This operation is functionally identical to an "add" operation at the

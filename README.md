@@ -14,7 +14,17 @@ can be treated as a log, etc.
 
 ## Features
 
-  * TODO
+  * Apply a "patch" to perform a set of operations on a Go structure
+
+  * Operations support add, remove, replace, move, copy
+
+  * Operations work on all Go primitive types and collection types
+
+  * JSON encode/decode Operation structures
+
+For an exhaustive list of supported features, please view the
+[JSON Patch RFC (RFC 6902)](https://tools.ietf.org/html/rfc6902) which
+this implements completely, but for Go structures.
 
 ## Installation
 
@@ -31,5 +41,33 @@ For usage and examples see the [Godoc](http://godoc.org/github.com/mitchellh/pat
 A quick code example is shown below:
 
 ```go
-TODO
+complex := map[string]interface{}{
+	"alice": 42,
+	"bob": []interface{}{
+		map[string]interface{}{
+			"name": "Bob",
+		},
+	},
+}
+
+value, err := Patch(complex, []*Operation{
+	&Operation{
+		Op:   OpCopy,
+		Path: "/alice",
+		From: "/bob",
+	},
+
+	&Operation{
+		Op:    OpReplace,
+		Path:  "/alice/0/name",
+		Value: "Alice",
+	},
+})
+if err != nil {
+	panic(err)
+}
+
+fmt.Printf("%s", value)
+// Output:
+// map[alice:[map[name:Alice]] bob:[map[name:Bob]]]
 ```
