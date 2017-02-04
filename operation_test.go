@@ -329,6 +329,46 @@ func TestOperationApply(t *testing.T) {
 			nil,
 			true,
 		},
+
+		//-----------------------------------------------------------
+		// copy
+		//-----------------------------------------------------------
+
+		{
+			"copy: object member",
+			Operation{
+				Op:   OpCopy,
+				Path: "/b",
+				From: "/a",
+			},
+			map[string]interface{}{"a": "bar"},
+			map[string]interface{}{"a": "bar", "b": "bar"},
+			false,
+		},
+
+		{
+			"copy: slice index",
+			Operation{
+				Op:   OpCopy,
+				Path: "/2",
+				From: "/1",
+			},
+			[]interface{}{1, 2, 3, 4},
+			[]interface{}{1, 2, 2, 3, 4},
+			false,
+		},
+
+		{
+			"copy: non-existent member",
+			Operation{
+				Op:   OpCopy,
+				Path: "/b",
+				From: "/a",
+			},
+			map[string]interface{}{},
+			nil,
+			true,
+		},
 	}
 
 	for i, tc := range cases {

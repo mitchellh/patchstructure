@@ -79,5 +79,6 @@ func init() {
 		OpRemove:  opRemove,
 		OpReplace: opReplace,
 		OpMove:    opMove,
+		OpCopy:    opCopy,
 	}
 }
